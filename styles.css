@@ -1,10 +1,12 @@
-/* TODO LIST
-- add fade in fade out of each section when scrolling
+/* 
+TODO LIST
+- add fade in fade out of each section when scrolling - put inside scroll snapping
 - add more projects
 - add more skills
 - add contact section
 - add footer
 - make responsive
+- add animations
 */
 
 :root {
@@ -35,7 +37,12 @@
     --amazon-orange: #ff9900;
     /* mysql colours */
     --mysql-blue: #00758f;
-
+    /* linkedin colours */
+    --linkedin-blue: #0a66c2;
+    /* github colours */
+    --github-black: #181717;
+    /* docker colours */
+    --docker-blue: #2496ed;
     /* navbar */
     --navbar-height: 64px;
     --double-navbar-height: 128px;
@@ -57,7 +64,7 @@ html {
 }
 
 body {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: Lato;
     color: black;
     padding: 32px 16px;
     display: flex;
@@ -91,33 +98,36 @@ a:visited {
 
 /* navbar styles */
 .nav {
-    background-color: var(--blue-800);
-    color: #ffffff;
     position: fixed;
-    width: 100%;
     top: 0;
     left: 0;
+    width: 100%;
     height: var(--navbar-height);
+    background-color: var(--blue-500);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
 .nav-container {
     max-width: 1200px;
-    margin: 0 auto;
     height: 100%;
+    margin: 0 auto;
+    padding: 0 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 16px;
 }
-.nav-container h3 {
+.nav-container h3 a button {
+    margin: 0;
     font-weight: 400;
     font-size: 20px;
     color: white;
+    vertical-align: middle;
 }
 .nav-name {
-    margin-right: 32px;
-    font-weight: 700;
     font-size: 24px;
+    font-weight: 600;
+    color: white;
 }
 .nav-titles {
     display: flex;
@@ -144,7 +154,6 @@ button {
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
     transition: background-color 0.3s ease;
 }
 button:hover {
@@ -233,12 +242,12 @@ section {
 
 /* projects section */
 .projects {
-    padding-top: var(--navbar-height);
+    margin-top: 16px;
 }
 .projects-container {
     display: flex;
     flex-direction: column;
-    gap: 64px;
+    gap: 24px;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -284,7 +293,7 @@ section {
     font-size: 20px;
     font-weight: 600;
     color: var(--blue-700);
-    margin: 8px 4px 2px 16px;
+    margin: 8px 4px 2px 8px;
 }
 .project-card p {
     font-size: 14px;
@@ -307,6 +316,7 @@ section {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+/* language tags */
 .project-tags #python {
     background-color: var(--steel-blue);
     color: white;
@@ -330,6 +340,68 @@ section {
 .project-tags #mysql {
     background-color: var(--mysql-blue);
     color: white;
+}
+/* framework tags */
+.project-tags #docker {
+    background-color: var(--docker-blue);
+    color: white;
+}
+
+/* project popup */
+.project-grid button {
+    all: inherit;
+    padding: 0;
+    border: none;
+    background-color: var(--blue-50);
+    cursor: pointer;
+}
+.popup-project {
+    display: none;
+    position: fixed; /* Stay in place ---- page stays in place not popup*/
+    z-index: 1001; /* navbar z-index=1000 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+.popup-content {
+    background-color: #fefefe;
+    padding: 20px;
+    margin: calc(1.5 * var(--navbar-height)) auto;
+    border: 1px solid #888;
+    width: 80%;
+    max-height: 50%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.popup-content img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+/* make both language tags and framework tags inline */
+.inline-tags {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
 }
 
 /* skills section */
@@ -366,16 +438,36 @@ section {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: white;
 }
-.skills-list img {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
+
+.skills-list i {
+    font-size: 64px;
     transition: transform 0.3s ease;
 }
-.skills-list img:hover {
+.skills-list i:hover {
     transform: scale(1.1);
 }
-
+.skills-list .tooltip-text {
+    visibility: hidden;
+    width: 100px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 4px 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position the tooltip above the icon */
+    left: 50%;
+    /* Use half of the width to center the tooltip */
+    margin-left: -50px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+}
+.skills-list i:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
 .about-title-icon {
     display: inline-flex;
     align-items: center;
@@ -388,13 +480,15 @@ section {
     text-align: middle;
 }
 
-.about-container img {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-    border-radius: 4px;
-    transition: transform 0.3s ease;
+.about-container i {
+    font-size: 30px;
 }
-.about-container img:hover {
-    transform: scale(1.1);
+.about-container .devicon-linkedin-plain {
+    color: var(--linkedin-blue);
+}
+.about-container .devicon-github-original {
+    color: var(--github-black);
+}
+.about-container a {
+    text-decoration: none;
 }
